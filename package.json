@@ -1,8 +1,8 @@
 {
     "name" : "com.wmk.popupmanager",
     "version" : "1.0.0",
-    "displayName" : "Popup Manager",
-    "description" : "Enhance your Unity projects with our Interface Reference Utility, a package designed to streamline the management of interface references directly within the Unity Editor.",
+    "displayName" : "Popup Scheduler",
+    "description" : "A versatile and easy-to-integrate Popup Scheduler for managing dynamic UI popups in your games.",
     "unity" : "2019.1",
     "author" : {
         "name" : "wmkimDev",
