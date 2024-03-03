@@ -1,0 +1,18 @@
+{
+    "name" : "com.wmk.popupmanager",
+    "version" : "1.0.0",
+    "displayName" : "Popup Manager",
+    "description" : "Enhance your Unity projects with our Interface Reference Utility, a package designed to streamline the management of interface references directly within the Unity Editor.",
+    "unity" : "2019.1",
+    "author" : {
+        "name" : "wmkimDev",
+        "email" : "thdakfwn3@gmail.com",
+        "url" : "https://github.com/wmkimDev"
+    },
+    "samples" : [
+        {
+            "displayName" : "Popup Manager Example",
+            "path" : "Samples/"
+        }
+    ]
+}
