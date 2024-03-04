@@ -16,7 +16,7 @@ namespace WMK.PopupScheduler.Runtime
         
         public bool Contains(T item) => _items.ContainsKey(item);
         
-        public T Peek() => IsEmpty ? default : _queues.Last().Value.Last();
+        public T Peek() => IsEmpty ? throw new InvalidOperationException($"{typeof(T).Name} queue is empty") : _queues.Last().Value.First();
         
         public void Enqueue(T item, Priority priority)
         {
@@ -46,10 +46,13 @@ namespace WMK.PopupScheduler.Runtime
         
         public T Dequeue()
         {
-            if (IsEmpty) return default;
+            if (IsEmpty)
+            {
+                throw new InvalidOperationException($"{typeof(T).Name} queue is empty");
+            }
             
             var queue = _queues.Last().Value;
-            var item = queue.Last();
+            var item = queue.First();
             queue.Remove(item);
             _items.Remove(item);
             CleanupEmptyQueue(_queues.Last().Key);

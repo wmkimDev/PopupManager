@@ -1,0 +1,16 @@
+{
+    "name": "WMK.PopupScheduler.PopupBase",
+    "rootNamespace": "",
+    "references": [
+        "GUID:dcf49f9bd487198408493d33b54b84fb"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

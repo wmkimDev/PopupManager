@@ -20,6 +20,7 @@ namespace WMK.PopupScheduler.Runtime
         
         public event Action<T> OnPopupScheduled;
         public event Action<T> OnPopupUnScheduled;
+        public event Action<T> BeforePopupOpen;
 
         public int OpenedCount => _popupOpened.Count;
         
@@ -62,6 +63,7 @@ namespace WMK.PopupScheduler.Runtime
             if (IsEmpty)
             {
                 _popupOpened.Add(popup);
+                BeforePopupOpen?.Invoke(popup);
                 popup.Open();
                 return;
             }
@@ -91,6 +93,7 @@ namespace WMK.PopupScheduler.Runtime
             HandlePopupClosure(nextPopup);
             _popupQueue.Dequeue();
             _popupOpened.Add(nextPopup);
+            BeforePopupOpen?.Invoke(nextPopup);
             nextPopup.Open();
         }
         

@@ -4,7 +4,7 @@ using WMK.PopupScheduler.Runtime;
 namespace WMK.PopupScheduler.Samples
 {
     /// <summary>
-    /// Manages popups by their keys, providing a higher-level interface to PopupService.
+    /// Manages popups by their keys, providing a higher-level interface to the PopupQueue.
     /// </summary>
     public class PopupManager
     {
