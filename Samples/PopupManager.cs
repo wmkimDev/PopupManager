@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
@@ -8,19 +9,24 @@ namespace WMK.PopupScheduler.Samples
     /// </summary>
     public class PopupManager
     {
-        private readonly PopupQueue<PopupBase> _popupQueue = new();
+        private readonly PopupScheduler<PopupBase> _popupScheduler = new();
         private readonly Dictionary<PopupKey, PopupBase> _popups = new();
         
-        public bool IsOpened(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupQueue.IsOpened(popup);
-        public bool IsPending(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupQueue.IsPending(popup);
-        public bool IsHandled(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupQueue.IsHandled(popup);
-        public PopupState GetState(PopupKey key) => _popups.TryGetValue(key, out var popup) ? _popupQueue.GetState(popup) : PopupState.UnHandled;
-        public PopupBase GetTopOpened() => _popupQueue.GetTopOpened();
-        public PopupBase Get(PopupKey key) => _popups.GetValueOrDefault(key);
-        
+        public bool IsOpened(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupScheduler.IsOpened(popup);
+        public bool IsPending(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupScheduler.IsPending(popup);
+        public bool IsHandled(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupScheduler.IsHandled(popup);
+        public PopupState GetState(PopupKey key) => _popups.TryGetValue(key, out var popup) ? _popupScheduler.GetState(popup) : PopupState.UnHandled;
+        public PopupBase GetTopOpened() => _popupScheduler.GetTopOpened();
+
+        public PopupBase Get(PopupKey key)
+        {
+            if (_popups.TryGetValue(key, out var popup)) return popup;
+            throw new KeyNotFoundException($"Popup with key {key} not found");
+        }
+
         public void Schedule(PopupBase popup)
         {
-            _popupQueue.Schedule(popup);
+            _popupScheduler.Schedule(popup);
             _popups[popup.Key] = popup;
         }
         
@@ -28,22 +34,30 @@ namespace WMK.PopupScheduler.Samples
         {
             if (_popups.TryGetValue(key, out var popup))
             {
-                _popupQueue.UnSchedule(popup);
+                _popupScheduler.UnSchedule(popup);
                 _popups.Remove(key);
+            }
+            else
+            {
+                Debug.LogWarning($"Popup with key {key} not found");
             }
         }
         
-        public void ClearAllPending() => _popupQueue.ClearAllPending();
+        public void ClearAllPending() => _popupScheduler.ClearAllPending();
         public void Close(PopupKey key)
         {
             if (_popups.TryGetValue(key, out var popup))
             {
-                _popupQueue.Close(popup);
+                _popupScheduler.Close(popup);
                 _popups.Remove(key);
+            }
+            else
+            {
+                Debug.LogWarning($"Popup with key {key} not found");
             }
         }
         
-        public void CloseTopOpened() => _popupQueue.CloseTopOpened();
-        public void CloseAllOpened() => _popupQueue.CloseAllOpened();
+        public void CloseTopOpened() => _popupScheduler.CloseTopOpened();
+        public void CloseAllOpened() => _popupScheduler.CloseAllOpened();
     }
 }

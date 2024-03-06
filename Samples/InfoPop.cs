@@ -3,7 +3,7 @@ using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
 {
-    public class MsgBox : PopupBase
+    public class InfoPop : PopupBase
     {
         public string Title { get; private set; } = string.Empty;
 
@@ -32,42 +32,42 @@ namespace WMK.PopupScheduler.Samples
         public static Builder New() => new();
         public class Builder
         {
-            private readonly MsgBox _msgBox = new MsgBox();
+            private readonly InfoPop _infoPop = new InfoPop();
             
             public Builder SetKey(PopupKey key)
             {
-                _msgBox.SetKey(key);
+                _infoPop.SetKey(key);
                 return this;
             }
             
             public Builder SetPriority(Priority priority)
             {
-                _msgBox.SetPriority(priority);
+                _infoPop.SetPriority(priority);
                 return this;
             }
             
             public Builder SetBehaviour(PopupBehaviour behaviour)
             {
-                _msgBox.SetBehaviour(behaviour);
+                _infoPop.SetBehaviour(behaviour);
                 return this;
             }
             
             public Builder SetTitle(string title)
             {
-                _msgBox.SetTitle(title);
+                _infoPop.SetTitle(title);
                 return this;
             }
             
             public Builder SetMessage(string message)
             {
-                _msgBox.SetMessage(message);
+                _infoPop.SetMessage(message);
                 return this;
             }
             
-            public MsgBox Build()
+            public InfoPop Build()
             {
-                PopupQueue<PopupBase>.ValidatePopup(_msgBox);
-                return _msgBox;
+                PopupScheduler<PopupBase>.ValidatePopup(_infoPop);
+                return _infoPop;
             }
         }
     }

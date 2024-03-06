@@ -9,11 +9,11 @@ namespace WMK.PopupScheduler.Runtime
     public enum PopupState
     {
         UnHandled,
-        Queued,
+        Pending,
         Opened,
     }
     
-    public class PopupQueue<T> where T : IPopup, IEquatable<T>
+    public class PopupScheduler<T> where T : IPopup, IEquatable<T>
     {
         private readonly PriorityBasedQueue<T> _popupQueue = new();
         private readonly List<T> _popupOpened = new();
@@ -40,9 +40,10 @@ namespace WMK.PopupScheduler.Runtime
         
         public PopupState GetState(T popup) => IsOpened(popup)
             ? PopupState.Opened
-            : (IsPending(popup) ? PopupState.Queued : PopupState.UnHandled);
+            : (IsPending(popup) ? PopupState.Pending : PopupState.UnHandled);
         
-        public T GetTopOpened() => AnyOpened ? _popupOpened.Last() : default;
+        public T GetTopOpened() => AnyOpened ? _popupOpened.Last() 
+            : throw new InvalidOperationException("No popups opened");
         
         public void Schedule(T popup)
         {
