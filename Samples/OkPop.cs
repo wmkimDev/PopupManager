@@ -1,23 +1,31 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.Serialization;
+using UnityEngine;
+using UnityEngine.Events;
 using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
 {
-    public class ConfirmPop : PopupBase
+    [CreateAssetMenu(fileName = "OkPop", menuName = "Popup/Common/OkPop")]
+    public class OkPop : PopupBase
     {
-        public string Title { get; private set; } = string.Empty;
-        public string Message { get; private set; } = string.Empty;
+        [SerializeField]
+        private string _title = string.Empty;
+        [SerializeField]
+        private string _message = string.Empty;
+        [SerializeField]
+        private string _okText = "OK";
         
-        public string OkText { get; private set; } = "OK";
+        public string Title => _title;
+        public string Message => _message;
+        public string OkText => _okText;
+        
+        public event Action OnOk;
 
-        public Action OnConfirm;
-        
-        public void SetTitle(string title) => Title = title;
-        public void SetMessage(string message) => Message = message;
-        public void SetOkText(string okText) => OkText = okText;
-        public void AddOnOkListener(Action onConfirm) => OnConfirm += onConfirm;
+        public void SetTitle(string title) => _title = title;
+        public void SetMessage(string message) => _message = message;
+        public void SetOkText(string okText) => _okText = okText;
+        public void ClearOnOkListener() => OnOk = null;
         
         public override List<string> GetInvalidFields()
         {
@@ -27,67 +35,59 @@ namespace WMK.PopupScheduler.Samples
             return invalidFields;
         }
         
-        protected override void OnOpen()
-        {
-            
-        }
-        
-        protected override void OnClose()
-        {
-            
-        }
+        public void Ok() => OnOk?.Invoke();
         
         public static Builder New() => new();
         public class Builder
         {
-            private readonly ConfirmPop _confirmPop = new ConfirmPop();
+            private readonly OkPop _okPop = new OkPop();
             
             public Builder SetKey(PopupKey key)
             {
-                _confirmPop.SetKey(key);
+                _okPop.SetKey(key);
                 return this;
             }
             
             public Builder SetPriority(Priority priority)
             {
-                _confirmPop.SetPriority(priority);
+                _okPop.SetPriority(priority);
                 return this;
             }
             
             public Builder SetBehaviour(PopupBehaviour behaviour)
             {
-                _confirmPop.SetBehaviour(behaviour);
+                _okPop.SetBehaviour(behaviour);
                 return this;
             }
             
             public Builder SetTitle(string title)
             {
-                _confirmPop.SetTitle(title);
+                _okPop.SetTitle(title);
                 return this;
             }
             
             public Builder SetMessage(string message)
             {
-                _confirmPop.SetMessage(message);
+                _okPop.SetMessage(message);
                 return this;
             }
             
             public Builder SetOkText(string okText)
             {
-                _confirmPop.SetOkText(okText);
+                _okPop.SetOkText(okText);
                 return this;
             }
             
             public Builder AddOnOkListener(Action onOk)
             {
-                _confirmPop.AddOnOkListener(onOk);
+                _okPop.OnOk += onOk;
                 return this;
             }
             
-            public ConfirmPop Build()
+            public OkPop Build()
             {
-                PopupScheduler<PopupBase>.ValidatePopup(_confirmPop);
-                return _confirmPop;
+                PopupScheduler<PopupBase>.ValidatePopup(_okPop);
+                return _okPop;
             }
         }
     }

@@ -1,23 +1,31 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
 {
-    public abstract class PopupBase : IPopup, IEquatable<PopupBase>
+    public abstract class PopupBase : ScriptableObject, IPopup, IEquatable<PopupBase>
     {
-        public PopupKey Key { get; private set; } = PopupKey.None;
-
-        public Priority Priority { get; private set; } = Priority.Normal;
-
-        public PopupBehaviour Behaviour { get; private set; } = PopupBehaviour.Pend;
-
-        protected void SetKey(PopupKey key) => Key = key;
-        protected void SetPriority(Priority priority) => Priority = priority;
-        protected void SetBehaviour(PopupBehaviour behaviour) => Behaviour = behaviour;
+        [SerializeField] 
+        private PopupKey _key = PopupKey.None;
+        [SerializeField] 
+        private Priority _priority = Priority.Normal;
+        [SerializeField] 
+        private PopupBehaviour _behaviour = PopupBehaviour.Pend;
         
-        public event Action<PopupBase> OnOpened;
-        public event Action<PopupBase> OnClosed;
+        public PopupKey Key => _key;
+        public Priority Priority => _priority;
+        public PopupBehaviour Behaviour => _behaviour;
+        
+        public event Action OnOpen;
+        public event Action OnClose;
+
+        protected void SetKey(PopupKey key) => _key = key;
+        protected void SetPriority(Priority priority) => _priority = priority;
+        protected void SetBehaviour(PopupBehaviour behaviour) => _behaviour = behaviour;
+        public void ClearOnOpenListener() => OnOpen = null;
+        public void ClearOnCloseListener() => OnClose = null;
 
         public virtual List<string> GetInvalidFields()
         {
@@ -26,24 +34,53 @@ namespace WMK.PopupScheduler.Samples
             return invalidFields;
         }
 
-        public void Open()
-        {
-            OnOpen();
-            OnOpened?.Invoke(this);
-        }
-
-        public void Close()
-        {
-            OnClose();
-            OnClosed?.Invoke(this);
-        }
-        
-        protected abstract void OnOpen();
-        protected abstract void OnClose();
+        public void Open() => OnOpen?.Invoke();
+        public void Close() => OnClose?.Invoke();
 
         public bool Equals(PopupBase other)
         {
             return other != null && Key == other.Key;
+        }
+        
+        public abstract class Builder<TBuilder, TPopup> where TBuilder : Builder<TBuilder, TPopup> where TPopup : PopupBase
+        {
+            protected readonly TPopup Popup = CreateInstance<TPopup>();
+            
+            public TBuilder SetKey(PopupKey key)
+            {
+                Popup.SetKey(key);
+                return (TBuilder) this;
+            }
+            
+            public TBuilder SetPriority(Priority priority)
+            {
+                Popup.SetPriority(priority);
+                return (TBuilder) this;
+            }
+            
+            public TBuilder SetBehaviour(PopupBehaviour behaviour)
+            {
+                Popup.SetBehaviour(behaviour);
+                return (TBuilder) this;
+            }
+            
+            public TBuilder AddOnOpenListener(Action onOpen)
+            {
+                Popup.OnOpen += onOpen;
+                return (TBuilder) this;
+            }
+            
+            public TBuilder AddOnCloseListener(Action onClose)
+            {
+                Popup.OnClose += onClose;
+                return (TBuilder) this;
+            }
+            
+            public virtual TPopup Build()
+            {
+                PopupScheduler<PopupBase>.ValidatePopup(Popup);
+                return Popup;
+            }
         }
     }
 }

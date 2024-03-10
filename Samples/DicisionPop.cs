@@ -1,25 +1,36 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
 {
+    [CreateAssetMenu(fileName = "DecisionPop", menuName = "Popup/Common/DecisionPop")]
     public class DecisionPop : PopupBase
     {
-        public string Title { get; private set; } = string.Empty;
-        public string Message { get; private set; } = string.Empty;
-        public string CancelText { get; private set; } = "Cancel";
-        public string OkText { get; private set; } = "OK";
+        [SerializeField] 
+        private string _title = string.Empty;
+        [SerializeField]
+        private string _message = string.Empty;
+        [SerializeField]
+        private string _cancelText = "Cancel";
+        [SerializeField]
+        private string _okText = "OK";
         
-        public Action OnCancel;
-        public Action OnConfirm;
-        
-        public void SetTitle(string title) => Title = title;
-        public void SetMessage(string message) => Message = message;
-        public void SetCancelText(string cancelText) => CancelText = cancelText;
-        public void SetOkText(string okText) => OkText = okText;
-        public void AddOnCancelListener(Action onCancel) => OnCancel += onCancel;
-        public void AddOnOkListener(Action onConfirm) => OnConfirm += onConfirm;
+        public string Title => _title;
+        public string Message => _message;
+        public string CancelText => _cancelText;
+        public string OkText => _okText;
+
+        public event Action OnCancel;
+        public event Action OnOk;
+
+        public void SetTitle(string title) => _title = title;
+        public void SetMessage(string message) => _message = message;
+        public void SetCancelText(string cancelText) => _cancelText = cancelText;
+        public void SetOkText(string okText) => _okText = okText;
+        public void ClearOnCancelListener() => OnCancel = null;
+        public void ClearOnOkListener() => OnOk = null;
         
         public override List<string> GetInvalidFields()
         {
@@ -30,15 +41,8 @@ namespace WMK.PopupScheduler.Samples
             return invalidFields;
         }
         
-        protected override void OnOpen()
-        {
-            
-        }
-        
-        protected override void OnClose()
-        {
-            
-        }
+        public void Cancel() => OnCancel?.Invoke();
+        public void Ok() => OnOk?.Invoke();
         
         public static Builder New() => new();
         public class Builder
@@ -89,13 +93,13 @@ namespace WMK.PopupScheduler.Samples
             
             public Builder AddOnCancelListener(Action onCancel)
             {
-                _decisionPop.AddOnCancelListener(onCancel);
+                _decisionPop.OnCancel += onCancel;
                 return this;
             }
             
             public Builder AddOnOkListener(Action onOk)
             {
-                _decisionPop.AddOnOkListener(onOk);
+                _decisionPop.OnOk += onOk;
                 return this;
             }
             

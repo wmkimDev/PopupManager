@@ -1,6 +1,6 @@
 {
     "name": "WMK.PopupScheduler.PopupBase",
-    "rootNamespace": "",
+    "rootNamespace": "WMK",
     "references": [
         "GUID:dcf49f9bd487198408493d33b54b84fb"
     ],

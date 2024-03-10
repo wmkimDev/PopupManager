@@ -1,16 +1,23 @@
 using System.Collections.Generic;
+using UnityEngine;
 using WMK.PopupScheduler.Runtime;
 
 namespace WMK.PopupScheduler.Samples
 {
+    [CreateAssetMenu(fileName = "InfoPop", menuName = "Popup/Common/InfoPop")]
     public class InfoPop : PopupBase
     {
-        public string Title { get; private set; } = string.Empty;
+        [SerializeField]
+        private string _title = string.Empty;
+        [SerializeField]
+        private string _message = string.Empty;
+        
+        public string Title => _title;
 
-        public string Message { get; private set; } = string.Empty;
+        public string Message => _message;
 
-        public void SetTitle(string title) => Title = title;
-        public void SetMessage(string message) => Message = message;
+        public void SetTitle(string title) => _title = title;
+        public void SetMessage(string message) => _message = message;
 
         public override List<string> GetInvalidFields()
         {
@@ -18,56 +25,26 @@ namespace WMK.PopupScheduler.Samples
             if (string.IsNullOrEmpty(Message)) invalidFields.Add(nameof(Message));
             return invalidFields;
         }
-
-        protected override void OnOpen()
-        {
-            
-        }
-
-        protected override void OnClose()
-        {
-            
-        }
         
         public static Builder New() => new();
-        public class Builder
+        public class Builder : Builder<Builder, InfoPop>
         {
-            private readonly InfoPop _infoPop = new InfoPop();
-            
-            public Builder SetKey(PopupKey key)
-            {
-                _infoPop.SetKey(key);
-                return this;
-            }
-            
-            public Builder SetPriority(Priority priority)
-            {
-                _infoPop.SetPriority(priority);
-                return this;
-            }
-            
-            public Builder SetBehaviour(PopupBehaviour behaviour)
-            {
-                _infoPop.SetBehaviour(behaviour);
-                return this;
-            }
-            
             public Builder SetTitle(string title)
             {
-                _infoPop.SetTitle(title);
+                Popup.SetTitle(title);
                 return this;
             }
             
             public Builder SetMessage(string message)
             {
-                _infoPop.SetMessage(message);
+                Popup.SetMessage(message);
                 return this;
             }
             
-            public InfoPop Build()
+            public override InfoPop Build()
             {
-                PopupScheduler<PopupBase>.ValidatePopup(_infoPop);
-                return _infoPop;
+                PopupScheduler<PopupBase>.ValidatePopup(Popup);
+                return Popup;
             }
         }
     }
