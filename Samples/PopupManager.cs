@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WMK.PopupScheduler.Runtime;
+using WMK.PopupScheduler.Samples.Model;
 
 namespace WMK.PopupScheduler.Samples
 {
@@ -11,6 +13,24 @@ namespace WMK.PopupScheduler.Samples
     {
         private readonly PopupScheduler<PopupBase> _popupScheduler = new();
         private readonly Dictionary<PopupKey, PopupBase> _popups = new();
+
+        public event Action<PopupBase> OnPopupScheduled
+        {
+            add => _popupScheduler.OnPopupScheduled += value;
+            remove => _popupScheduler.OnPopupScheduled -= value;
+        }
+        
+        public event Action<PopupBase> OnPopupUnScheduled
+        {
+            add => _popupScheduler.OnPopupUnScheduled += value;
+            remove => _popupScheduler.OnPopupUnScheduled -= value;
+        }
+        
+        public event Action<PopupBase> BeforePopupOpen
+        {
+            add => _popupScheduler.BeforePopupOpen += value;
+            remove => _popupScheduler.BeforePopupOpen -= value;
+        }
         
         public bool IsOpened(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupScheduler.IsOpened(popup);
         public bool IsPending(PopupKey key) => _popups.TryGetValue(key, out var popup) && _popupScheduler.IsPending(popup);

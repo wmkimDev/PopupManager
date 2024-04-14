@@ -2,7 +2,8 @@
     "name": "WMK.PopupScheduler.PopupBase",
     "rootNamespace": "WMK",
     "references": [
-        "GUID:dcf49f9bd487198408493d33b54b84fb"
+        "GUID:dcf49f9bd487198408493d33b54b84fb",
+        "GUID:962f75d2a66ca3741815080a77b41adb"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

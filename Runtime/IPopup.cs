@@ -23,7 +23,7 @@ namespace WMK.PopupScheduler.Runtime
     {
         public Priority Priority { get; }
         public PopupBehaviour Behaviour { get; }
-        public List<string> GetInvalidFields();
+        public bool IsValid { get; }
         public void Open();
         public void Close();
     }

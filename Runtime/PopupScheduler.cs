@@ -47,6 +47,11 @@ namespace WMK.PopupScheduler.Runtime
         
         public void Schedule(T popup)
         {
+            if (popup == null)
+            {
+                throw new ArgumentNullException(nameof(popup));
+            }
+            
             ValidatePopup(popup);
 
             if (IsPending(popup))
@@ -200,10 +205,12 @@ namespace WMK.PopupScheduler.Runtime
 
         public static void ValidatePopup(T popup)
         {
-            var invalidFields = popup.GetInvalidFields();
-            if (invalidFields.Count == 0) return;
-            var errorMessage = $"{popup.GetType().Name} has invalid fields: {string.Join(", ", invalidFields)}";
-            throw new Exception(errorMessage);
+            Assert.IsTrue(popup != null);
+            if (!popup.IsValid)
+            {
+                var errorMessage = $"{popup.GetType().Name} is not valid";
+                throw new Exception(errorMessage);
+            }
         }
     }
 }
